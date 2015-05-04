@@ -7,7 +7,7 @@ var userSchema = mongoose.Schema({
 
     local            : {
         email        : String,
-        password     : String,
+        password     : String
     },
     facebook         : {
         id           : String,
@@ -26,6 +26,19 @@ var userSchema = mongoose.Schema({
         token        : String,
         email        : String,
         name         : String
+    },
+    userDetails      : {
+        id           : Number,
+        firstName    : String,
+        lastName     : String,
+        bloodGroup   : String,
+        dob          : Number,
+        sex          : String,
+        phone        : String,
+        address      : String,
+        honorPeriod  : Number,
+        lastDonationTime : Number,
+        lastCollectionTime :Number
     }
 
 });
@@ -40,5 +53,6 @@ userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
 };
 
+userSchema.set('collection', 'users');
 // create the model for users and expose it to our app
 module.exports = mongoose.model('User', userSchema);

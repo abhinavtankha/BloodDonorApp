@@ -1,4 +1,22 @@
+var userSchema = require('./models/user.js')
 module.exports = function(app, passport) {
+
+
+// TBD need to link an older account to the one mentioned here..
+	app.post('/storeUserDetails', function(req, res){
+		 var userDetails = new userSchema();
+		 userDetails.userDetails.firstName = req.query.first_name;
+		 userDetails.userDetails.lastName = req.query.last_name;
+		 userDetails.userDetails.bloodGroup = req.query.blood_group;
+		 userDetails.userDetails.dob = req.query.dob;
+		 userDetails.userDetails.sex = req.query.sex;
+		 userDetails.userDetails.phone = req.query.phone;
+		 userDetails.userDetails.address = req.query.address;
+		 userDetails.userDetails.honorPeriod = req.query.honor_period;
+		 userDetails.userDetails.lastDonationTime = req.query.last_donation_time;
+		 userDetails.userDetails.lastCollectionTime = req.query.last_collection_time;
+
+	})
 
 // normal routes ===============================================================
 
@@ -63,19 +81,6 @@ module.exports = function(app, passport) {
 				failureRedirect : '/'
 			}));
 
-	// twitter --------------------------------
-
-		// send to twitter to do the authentication
-		app.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }));
-
-		// handle the callback after twitter has authenticated the user
-		app.get('/auth/twitter/callback',
-			passport.authenticate('twitter', {
-				successRedirect : '/profile',
-				failureRedirect : '/'
-			}));
-
-
 	// google ---------------------------------
 
 		// send to google to do the authentication
@@ -114,19 +119,6 @@ module.exports = function(app, passport) {
 				failureRedirect : '/'
 			}));
 
-	// twitter --------------------------------
-
-		// send to twitter to do the authentication
-		app.get('/connect/twitter', passport.authorize('twitter', { scope : 'email' }));
-
-		// handle the callback after twitter has authorized the user
-		app.get('/connect/twitter/callback',
-			passport.authorize('twitter', {
-				successRedirect : '/profile',
-				failureRedirect : '/'
-			}));
-
-
 	// google ---------------------------------
 
 		// send to google to do the authentication
@@ -160,15 +152,6 @@ module.exports = function(app, passport) {
 	app.get('/unlink/facebook', isLoggedIn, function(req, res) {
 		var user            = req.user;
 		user.facebook.token = undefined;
-		user.save(function(err) {
-			res.redirect('/profile');
-		});
-	});
-
-	// twitter --------------------------------
-	app.get('/unlink/twitter', isLoggedIn, function(req, res) {
-		var user           = req.user;
-		user.twitter.token = undefined;
 		user.save(function(err) {
 			res.redirect('/profile');
 		});

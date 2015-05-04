@@ -18,7 +18,7 @@ var configDB = require('./config/database.js');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
-
+mongoose.set('debug', true);
 require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
@@ -36,8 +36,12 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+// user details
+require('./app/userRoutes.js')(app, passport); 
+
+//user location
+require('./app/locationRoutes.js')(app, passport); 
 
 // launch ======================================================================
 app.listen(port);
-console.log('The magic happens on port ' + port);
+console.log('It happens on port ' + port);
