@@ -15,4 +15,3 @@ var userLocation = new Schema({
 userLocation.set('collection', 'userlocation');
 
 module.exports = mongoose.model('userLocation', userLocation);
-

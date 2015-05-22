@@ -42,6 +42,8 @@ require('./app/userRoutes.js')(app, passport);
 //user location
 require('./app/locationRoutes.js')(app, passport); 
 
+require('./app/donationDetails.js')(app, passport);
+
 // launch ======================================================================
 app.listen(port);
 console.log('It happens on port ' + port);

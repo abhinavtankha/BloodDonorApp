@@ -37,6 +37,7 @@ var userSchema = mongoose.Schema({
         phone        : String,
         address      : String,
         honorPeriod  : Number,
+        status       : String,
         lastDonationTime : Number,
         lastCollectionTime :Number
     }
