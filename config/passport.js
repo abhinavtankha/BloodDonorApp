@@ -1,7 +1,6 @@
 // load all the things we need
 var LocalStrategy    = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-var TwitterStrategy  = require('passport-twitter').Strategy;
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
@@ -30,9 +29,7 @@ module.exports = function(passport) {
         });
     });
 
-    // =========================================================================
-    // LOCAL LOGIN =============================================================
-    // =========================================================================
+    // LOCAL LOGIN
     passport.use('local-login', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
         usernameField : 'email',
@@ -65,9 +62,7 @@ module.exports = function(passport) {
 
     }));
 
-    // =========================================================================
-    // LOCAL SIGNUP ============================================================
-    // =========================================================================
+   // LOCAL SIGNUP
     passport.use('local-signup', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
         usernameField : 'email',
@@ -139,9 +134,7 @@ module.exports = function(passport) {
 
     }));
 
-    // =========================================================================
-    // FACEBOOK ================================================================
-    // =========================================================================
+    // FACEBOOK
     passport.use(new FacebookStrategy({
 
         clientID        : configAuth.facebookAuth.clientID,
@@ -220,9 +213,7 @@ module.exports = function(passport) {
 
    
 
-    // =========================================================================
-    // GOOGLE ==================================================================
-    // =========================================================================
+   // GOOGLE
     passport.use(new GoogleStrategy({
 
         clientID        : configAuth.googleAuth.clientID,

@@ -22,23 +22,21 @@ module.exports = function(app, passport){
 		})
 	});
 
-
-
 // NOTE: keep combinations for blood groups covering which all blood groups
 	app.get('/getUsersNear', function(req, res){
 		console.log(req.query.bloodGroup);
-		var eligibleBloodDonors = bloodTypes.recipientMapping[req.body.bloodGroup]; // if no match is found undefined is set and all matches are given in qiery response
+		var eligibleBloodDonors = bloodTypes.recipientMapping[req.query.bloodGroup]; // if no match is found undefined is set and all matches are given in qiery response
 		var query = userLocationSchema.find({
 				'geoLocation' : {
 					$near : [
-						req.body.lat,
-						req.body.lon],
-					$maxDistance: req.body.distance	
+						req.query.lat,
+						req.query.lon],
+					$maxDistance: req.query.distance	
 				},
 				bloodGroup: eligibleBloodDonors
 
 				});
-			console.log(req.body.bloodGroup);
+			console.log(req.query.bloodGroup);
 			query.exec(function(err, userLocations){
 
 				if(err){
@@ -54,7 +52,7 @@ module.exports = function(app, passport){
 	});
 
 	app.get('/getUserLocation', function(req, res){
-		userLocationSchema.findOne({userId:req.body.id},function(err, result){
+		userLocationSchema.findOne({userId:req.query.id},function(err, result){
 			if(err){
 				console.log("Error in getting User Location");
 			}
@@ -71,5 +69,14 @@ module.exports = function(app, passport){
 
 
 	});
+
+
+	// route middleware to ensure user is logged in
+	function isLoggedIn(req, res, next) {
+	if (req.isAuthenticated())
+		return next();
+
+		res.send({"success": false,"reason":"Authentication Failure"});
+}
 
 }

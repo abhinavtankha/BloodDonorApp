@@ -1,23 +1,52 @@
+// TODO make sure for an existing account storeuserdetails only updated the entries
 var userSchema = require('./models/user.js')
+var util = require("util"); 
+var fs = require("fs"); 
 module.exports = function(app, passport) {
 
 
-// TBD need to link an older account to the one mentioned here..
+// TBD need to link an older account to the one mentioned here.. for profile updates
 	app.post('/storeUserDetails', function(req, res){
 		 var userDetails = new userSchema();
-		 userDetails.userDetails.firstName = req.query.first_name;
-		 userDetails.userDetails.lastName = req.query.last_name;
-		 userDetails.userDetails.bloodGroup = req.query.blood_group;
-		 userDetails.userDetails.dob = req.query.dob;
-		 userDetails.userDetails.sex = req.query.sex;
-		 userDetails.userDetails.phone = req.query.phone;
-		 userDetails.userDetails.address = req.query.address;
-		 userDetails.userDetails.honorPeriod = req.query.honor_period;
-		 userDetails.userDetails.lastDonationTime = req.query.last_donation_time;
-		 userDetails.userDetails.lastCollectionTime = req.query.last_collection_time;
+		 userDetails.userDetails.firstName = req.body.first_name;
+		 userDetails.userDetails.lastName = req.body.last_name;
+		 userDetails.userDetails.bloodGroup = req.body.blood_group;
+		 userDetails.userDetails.dob = req.body.dob;
+		 userDetails.userDetails.sex = req.body.sex;
+		 userDetails.userDetails.phone = req.body.phone;
+		 userDetails.userDetails.address = req.body.address;
+		 userDetails.userDetails.honorPeriod = req.body.honor_period;
+		 userDetails.userDetails.lastDonationTime = req.body.last_donation_time;
+		 userDetails.userDetails.status = req.body.status;
+		 userDetails.userDetails.lastCollectionTime = req.body.last_collection_time;
+		 userDetails.save(function(err){
+		 	if(err){
+		 		res.json({'success' : true});
+		 	}
+		 	res.json({'success' : true});
+
+		 })
 
 	})
 
+
+	app.post('/profile/uploadPhoto', function(req, res){
+		if (req.files) { 
+		console.log(util.inspect(req.files));
+		if (req.files.myfile.size === 0) {
+		            res.status(400).end();
+		}
+		fs.exists(req.files.myfile.path, function(exists) { 
+			if(exists) { 
+				console.log("File uploaded");
+				res.end(); 
+			} else { 
+				console.log("File in request but not uploaded..");
+				res.end(); 
+			} 
+		}); 
+		} 
+	})
 // normal routes ===============================================================
 
 	// show the home page (will also have our login links)
@@ -43,7 +72,6 @@ module.exports = function(app, passport) {
 // =============================================================================
 
 	// locally --------------------------------
-		// LOGIN ===============================
 		// show the login form
 		app.get('/login', function(req, res) {
 			res.render('login.ejs', { message: req.flash('loginMessage') });

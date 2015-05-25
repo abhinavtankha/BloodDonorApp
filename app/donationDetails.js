@@ -1,30 +1,47 @@
+// TODO add the name of the donor/requester in response
 var donationDetailsSchema = require('./models/bloodDonations.js');
 
 module.exports = function(app, passport){
 
-	//construct query and get value of donation details from user userId
+	/*
+	* Get Donation Details for a User
+	*/
 	app.get('/getDonationDetails', function(req, res){
 		var id = req.query.id;
+		console.log('outside find');
+		var userDonationDetails = {donation_list: [],
+									units_donated: 0,
+									units_received:0};
 		donationDetailsSchema
 			.find({ $or : [{donorId:id}, {recipient:id}]})
-			.exec(function(req, res){
+			.exec(function(request, response){
 				var unitsDonated = 0,
 					unitsReceived = 0;
-				for(var i=0; i < res.length; i++){	
-					if(res[i].donorId == id){
-						unitsDonated += res[i].units;
+				for(var i=0; i < response.length; i++){	
+					if(response[i].donorId == id){
+						console.log('inside donor');
+						unitsDonated += response[i].units;
+						userDonationDetails.donation_list.push({"user_id" : response[i].recipientId,
+							"name": null, "units": "-"+response[i].units, "date": response[i].date});
+						console.log(userDonationDetails.donation_list);
 					}
-					else if(res[i].recipientId == id){
-						unitsReceived += res[i].units;
+					else if(response[i].recipientId == id){
+						console.log('inside recipient');
+						unitsReceived += response[i].units;
+						userDonationDetails.donation_list.push({"user_id" : response[i].donorId,
+							"name": null, "units": "+"+response[i].units, "date": response[i].date});
 					}
-					console.log(res[i]);
 				}
-			})
+				userDonationDetails.units_donated = unitsDonated;
+				userDonationDetails.units_received = unitsReceived;
+				res.send(userDonationDetails);
+			});
+			
+	});	
 
-	})
-	
-
-	//construct query and store value of donation details
+	/*
+	* Store the Donation Details of a donation
+	*/
 	app.post('/storeDonationDetails', function(req, res){
 		var donationDetails = new donationDetailsSchema();
 		donationDetails.donorId = req.body.donorId;

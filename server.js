@@ -8,6 +8,7 @@ var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
+var multer   = require('multer');
 
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -30,10 +31,28 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(session({ 
+	secret: 'ilovescotchscotchyscotchscotch',
+	saveUninitialized: true,
+	resave: true
+})); 
+// session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+
+/*
+app.use(multer({dest: './uploads/',
+	rename: function(fieldname, filename){
+		return filename + Date.now();
+	},
+	onFileUploadStart: function (file) {
+  		console.log(file.originalname + ' is starting ...')
+	},
+	onFileUploadComplete: function (file) {
+  		console.log(file.fieldname + ' uploaded to  ' + file.path);
+}}));
+*/
 
 // routes ======================================================================
 // user details
@@ -46,4 +65,4 @@ require('./app/donationDetails.js')(app, passport);
 
 // launch ======================================================================
 app.listen(port);
-console.log('It happens on port ' + port);
+console.log('It happening on port ' + port + '... ');

@@ -28,7 +28,7 @@ var userSchema = mongoose.Schema({
         name         : String
     },
     userDetails      : {
-        id           : Number,
+        id           : {type : Number},
         firstName    : String,
         lastName     : String,
         bloodGroup   : String,
